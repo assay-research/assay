@@ -1,0 +1,385 @@
+<title>What the Leaderboards Hide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: single measure of running prose, interrupted by full-bleed data blocks --
+   funnel table, six numbered findings each opening on its own figure, method appendix.
+   Tokens are the same set as the Leaderboard Reality Check tool, so the two read as one site. */
+:root{
+  --paper:#eceeef;
+  --card:#f8f9f9;
+  --ink:#191c1f;
+  --ink-soft:#5a6269;
+  --ink-faint:#8b9298;
+  --rule:#d2d7d9;
+  --rule-soft:#e1e5e6;
+  --accent:#275b61;
+  --pass:#386b36;
+  --warn:#8a5610;
+  --fail:#8e2f22;
+  --fail-bg:#f2e0dc;
+  --font-sans:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131619;
+    --card:#1b1f23;
+    --ink:#e4e6e7;
+    --ink-soft:#9aa2a8;
+    --ink-faint:#71797f;
+    --rule:#2c3237;
+    --rule-soft:#232931;
+    --accent:#7eb4ba;
+    --pass:#86b37c;
+    --warn:#d4a556;
+    --fail:#d98578;
+    --fail-bg:#2e1c19;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131619;
+  --card:#1b1f23;
+  --ink:#e4e6e7;
+  --ink-soft:#9aa2a8;
+  --ink-faint:#71797f;
+  --rule:#2c3237;
+  --rule-soft:#232931;
+  --accent:#7eb4ba;
+  --pass:#86b37c;
+  --warn:#d4a556;
+  --fail:#d98578;
+  --fail-bg:#2e1c19;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font-sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:30px 56px}
+.eyebrow{
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px;
+}
+h1{
+  font-size:clamp(28px,6vw,42px);line-height:1.08;margin:0 0 14px;
+  font-weight:700;letter-spacing:-.022em;text-wrap:balance;
+}
+.standfirst{
+  margin:0;font-size:clamp(17px,2.6vw,19px);line-height:1.5;color:var(--ink-soft);
+}
+.standfirst strong{color:var(--ink);font-weight:600}
+.byline{
+  margin:22px 0 0;padding-block:12px;border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.04em;
+  color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:4px 18px;
+}
+p{margin:0 0 17px}
+h2{
+  font-size:clamp(20px,3.4vw,24px);line-height:1.2;letter-spacing:-.015em;
+  margin:40px 0 14px;font-weight:600;text-wrap:balance;
+}
+h3{font-size:16px;margin:28px 0 10px;font-weight:600}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
+strong{font-weight:600}
+code,.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+code{font-size:13.5px;background:var(--card);border:1px solid var(--rule-soft);
+  border-radius:3px;padding:1px 4px;word-break:break-word}
+/* ---- data blocks ---- */
+.scroll{overflow-x:auto;margin:0 0 20px;border:1px solid var(--rule);
+  border-radius:4px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+caption{
+  caption-side:top;text-align:left;padding:12px 14px 10px;
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+  border-bottom:1px solid var(--rule-soft);
+}
+th,td{padding:8px 14px;text-align:left;border-bottom:1px solid var(--rule-soft)}
+th{font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint)}
+td.n{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right;
+  white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tr.out td{color:var(--fail)}
+tr.keep td{background:var(--fail-bg)}
+tr.keep td:first-child{font-weight:600}
+/* ---- findings ---- */
+.finding{
+  margin:34px 0 0;padding-top:22px;border-top:1px solid var(--rule);
+}
+.fnum{
+  font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.12em;
+  color:var(--ink-faint);display:block;margin-bottom:6px;
+}
+.finding h2{margin-top:0}
+.figure{
+  margin:0 0 16px;padding:14px 16px;background:var(--card);
+  border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:3px;
+}
+.figure .big{
+  font-family:var(--font-mono);font-size:clamp(22px,4.4vw,28px);font-weight:600;
+  letter-spacing:-.02em;line-height:1.15;font-variant-numeric:tabular-nums;
+  display:block;
+}
+.figure .cap{font-size:13.5px;color:var(--ink-soft);display:block;margin-top:4px}
+ul{margin:0 0 17px;padding-left:22px}
+li{margin-bottom:7px}
+.callout{
+  margin:26px 0;padding:16px 18px;background:var(--card);
+  border:1px solid var(--rule);border-radius:4px;
+}
+.callout p:last-child{margin-bottom:0}
+.callout .h{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 8px;
+}
+.toolbar{
+  margin:30px 0 0;padding:18px;background:var(--card);
+  border:1px solid var(--rule);border-radius:4px;
+}
+.toolbar .h{font-weight:600;margin:0 0 6px}
+.toolbar p{font-size:14.5px;color:var(--ink-soft);margin:0 0 12px}
+.toolbar a.cta{
+  display:inline-block;font-weight:600;font-size:14.5px;
+  background:var(--accent);color:var(--paper);text-decoration:none;
+  padding:9px 18px;border-radius:3px;
+}
+a.cta:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.foot{
+  margin:44px 0 0;padding-top:18px;border-top:1px solid var(--rule);
+  font-size:13.5px;color:var(--ink-faint);
+}
+.foot p{margin:0 0 9px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<p class="eyebrow">Original research &middot; 13 October 2026</p>
+<h1>What the leaderboards hide</h1>
+<p class="standfirst">We screened all <strong>47,190</strong> accounts on the public Hyperliquid
+leaderboard, measured <strong>317</strong> of them trade by trade, and found that
+<strong>143</strong> survive a test the leaderboard itself does not apply. Then we asked the
+question none of the copy-trading products answer: with a $200 account, how many of those 143
+could you actually follow? <strong>Thirty-two.</strong> Seven at $99.</p>
+
+<p class="byline">
+  <span>Method and raw counts below</span>
+  <span>No affiliation with Hyperliquid or any copy-trading product</span>
+  <span>Not investment advice</span>
+</p>
+
+<p>Every copy-trading product built on a public order book starts from the same place: rank the
+wallets, show the curve, offer a button. The ranking is the product. So the ranking is where to
+look, and the ranking is built on data with six specific, checkable defects.</p>
+
+<p>None of what follows is an opinion about anyone's trading. It is arithmetic on the exchange's
+own API, and each finding below names the number you can reproduce it from.</p>
+
+<h2>The funnel, with every exclusion stated</h2>
+
+<p>A screen that reports only its survivors is doing the same thing a league table does. Here is
+the whole population and where it went. <strong>All 47,190 ranked accounts in, 143 out.</strong></p>
+
+<div class="scroll">
+<table>
+  <caption>BTC perpetual traders, Hyperliquid, screened 9 October 2026</caption>
+  <thead><tr><th>Stage</th><th>Accounts</th><th>Share of exclusions</th></tr></thead>
+  <tbody>
+    <tr><td>On the public leaderboard</td><td class="n">47,190</td><td class="n">&mdash;</td></tr>
+    <tr><td>Pass the first screen</td><td class="n">2,917</td><td class="n">&mdash;</td></tr>
+    <tr><td>At least 20 closed BTC trades</td><td class="n">973</td><td class="n">&mdash;</td></tr>
+    <tr><td><strong>Measurable</strong></td><td class="n"><strong>317</strong></td><td class="n">&mdash;</td></tr>
+    <tr class="out"><td>Excluded &mdash; dead, last BTC trade over 45 days ago</td><td class="n">274</td><td class="n">41.8%</td></tr>
+    <tr class="out"><td>Excluded &mdash; equity unrepresentative of the trading</td><td class="n">183</td><td class="n">27.9%</td></tr>
+    <tr class="out"><td>Excluded &mdash; no losing trade at all, break-even incomputable</td><td class="n">125</td><td class="n">19.1%</td></tr>
+    <tr class="out"><td>Excluded &mdash; no equity in perp or spot</td><td class="n">45</td><td class="n">6.9%</td></tr>
+    <tr class="out"><td>Excluded &mdash; no winning trade at all</td><td class="n">~30</td><td class="n">4.6%</td></tr>
+    <tr class="keep"><td>Profitable, positive edge, and enough losses to measure it</td><td class="n">143</td><td class="n">&mdash;</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="finding">
+<span class="fnum">Finding 1</span>
+<h2>Two in five of the accounts we had to throw out were dead ones still being ranked</h2>
+<div class="figure">
+  <span class="big">274 of 656</span>
+  <span class="cap">Exclusions that were accounts with no BTC trade in over 45 days &mdash; 41.8%,
+  the single largest data-quality problem in the exercise.</span>
+</div>
+<p>They are not delisted. They sit in the table with a month-return figure attached, and some of
+those figures are large: four of them displayed <span class="num">112.9%</span>,
+<span class="num">207.6%</span>, <span class="num">122.7%</span> and
+<span class="num">173.0%</span> month returns after more than a hundred days without placing a
+trade. The number is real. It is just not about this month, and nothing on the page says so.</p>
+<p>Staleness is about <strong>5% across every account we screened, but roughly 10% in the top 40
+by return</strong>. It concentrates exactly where the ranking is pointing, because an account
+that stopped trading stopped losing.</p>
+</div>
+
+<div class="finding">
+<span class="fnum">Finding 2</span>
+<h2>The best-looking record on the chain is half a position</h2>
+<div class="figure">
+  <span class="big">606 closed trades, 0 losses</span>
+  <span class="cap">$3.43m realised, 100% taker across all 1,318 fills, BTC and ETH only.</span>
+</div>
+<p>This is the account anyone ranking by return or by win rate finds first. We checked whether it
+was hiding a loss somewhere: it is not. $3.51m of perpetual equity, $29.85m of notional, one open
+12,000 ETH position at 20&times; showing <span class="num">+$597,506</span> unrealised.</p>
+<p>A discretionary trader does not go 606 for 606. The readings that fit are an arbitrage or basis
+book whose other leg is not on this exchange, or a book that only ever realises the profitable
+tranche. <strong>Either way the on-chain record is one side of a position</strong>, and copying one
+leg of a hedge takes on precisely the directional risk the hedge exists to cancel.</p>
+<p>It is not a lone case. <strong>125 of the accounts we measured had no losing trade at all.</strong>
+And the exchange reports <code>closedPnl</code>, which is realised only, so an account can carry an
+underwater position indefinitely and show a clean record the whole time.</p>
+</div>
+
+<div class="finding">
+<span class="fnum">Finding 3</span>
+<h2>Ranking by win rate is a known mistake. Ranking by edge fails the same way.</h2>
+<p>Win rate alone says nothing, which everyone knows, so the sophisticated version is to compare
+it against the win rate a trader needs to break even:</p>
+<p><code>break-even % = avg_loss / (avg_win + avg_loss)</code>, and edge is
+<code>win % &minus; break-even %</code>.</p>
+<p>That is the right formula and it still produced nonsense, because of what it is estimated from.
+The top twelve accounts by edge scored <span class="num">+86</span> to
+<span class="num">+98</span> points. Their loss counts:</p>
+<div class="figure">
+  <span class="big">1 &nbsp;1 &nbsp;1 &nbsp;1 &nbsp;5 &nbsp;2 &nbsp;1 &nbsp;2 &nbsp;2 &nbsp;7 &nbsp;3 &nbsp;1</span>
+  <span class="cap">Losing trades behind each of the twelve largest measured edges.
+  Median: two. Eight of the twelve have exactly one.</span>
+</div>
+<p>A break-even rate of 0.5% means the average loss is a two-hundredth of the average win, which
+happens when one small loss is the entire loss sample. <strong>An edge estimated from a single
+loss is noise with a formula on it.</strong></p>
+<p>Requiring at least ten losing trades before the number is allowed to count takes the
+"profitable" population from <strong>205 down to 143</strong>. Their median edge is
+<span class="num">+27.1</span> points. That is the honest version of the same list.</p>
+</div>
+
+<div class="finding">
+<span class="fnum">Finding 4</span>
+<h2>Every one of these products shows you a window and calls it a career</h2>
+<div class="figure">
+  <span class="big">2,000 fills</span>
+  <span class="cap">The maximum <code>userFills</code> returns. Median span of the history we could
+  see: 124 days.</span>
+</div>
+<p>The API hands back the most recent 2,000 fills and no more. For a quiet account that is a long
+history; for an active one it is a few weeks, and the part you cannot see is the earlier part,
+which is where a trader was learning. Two accounts in our measurable set were sitting exactly on
+the cap. Nothing on a leaderboard distinguishes a 90-day record from a three-year one.</p>
+</div>
+
+<div class="finding">
+<span class="fnum">Finding 5</span>
+<h2>The accounts that blew up are not in the pool at all</h2>
+<div class="figure">
+  <span class="big">52.8%</span>
+  <span class="cap">Share of the 43,356 accounts with a usable window that are profitable
+  all-time &mdash; measured after the liquidated ones have already gone.</span>
+</div>
+<p>Liquidated accounts do not appear on the leaderboard. Whatever you compute from it is computed
+on survivors, so every win rate, every return and every edge in this article is an overestimate,
+including ours. A barely-positive coin flip is the honest reading of that 52.8%, and it is the
+optimistic reading.</p>
+</div>
+
+<div class="finding">
+<span class="fnum">Finding 6</span>
+<h2>Your account size decides this, not the trader's skill &mdash; and nobody tells you</h2>
+<p>This is the finding with money attached, and it is the one we have not seen anywhere else.</p>
+<p>When you copy someone, the order placed for you is
+<code>their_order &times; (your_equity / their_equity)</code>. The traders on these leaderboards hold
+six figures; the median equity among our 143 is <span class="num">$166,930</span>. Scale their
+position down to a $200 account and a large share of the orders land under the exchange minimum
+and never go out at all.</p>
+<p>So we counted it. Of the 143 that survived every test above, how many could a given account
+actually follow &mdash; defined as <strong>at least 80% of their orders placeable at your size, and
+not one blocked exit</strong>:</p>
+<div class="scroll">
+<table>
+  <caption>Followable traders by account size, of 143 that passed every other test</caption>
+  <thead><tr><th>Your account</th><th>Followable</th><th>Best edge available</th><th>Median edge</th></tr></thead>
+  <tbody>
+    <tr><td>$99</td><td class="n">7</td><td class="n">+25.4</td><td class="n">+13.5</td></tr>
+    <tr><td>$200</td><td class="n">32</td><td class="n">+70.1</td><td class="n">+19.5</td></tr>
+    <tr><td>$400</td><td class="n">50</td><td class="n">+70.1</td><td class="n">+22.5</td></tr>
+    <tr class="keep"><td>All 143</td><td class="n">143</td><td class="n">+70.1</td><td class="n">+27.1</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Going from $99 to $400 multiplies the pool by seven.</strong> Nothing about the traders
+changed. And the smaller your account, the worse the traders you can reach: the best edge
+available at $99 is <span class="num">+25.4</span> against <span class="num">+70.1</span> at the top
+of the list, and the seven include win rates of <span class="num">16.1%</span> and
+<span class="num">23.7%</span>. <strong>The followable ones are not the good ones.</strong></p>
+<div class="callout">
+  <p class="h">The part that should be on every product page</p>
+  <p>A blocked order is survivable on the way in. You simply do not get the trade. A blocked order
+  on the way <em>out</em> leaves you holding leveraged exposure that nobody is managing &mdash; the
+  trader has closed, your copy has not, and no further signal is coming.</p>
+  <p><strong>Of the 143, 125 have at least one order a $99 account could not place to get out.
+  At $400 it is still 85.</strong> The median $99 account could place about
+  <span class="num">59.7%</span> of a survivor's orders. That is the number that decides whether
+  copying works, and it is a property of your balance, not of their skill.</p>
+</div>
+</div>
+
+<h2>What we do with this, and what we will not do</h2>
+<p>We publish the data on one address and let you read it. We do not rank traders, we do not tell
+you who to copy or at what size, and we never place an order. The moment a service says "copy this
+one, at this size" it is giving a personal recommendation on a financial instrument, and if it
+executes for you it is managing your money. Both are regulated activities in the EU and both are
+somebody else's business.</p>
+<p>So the tool is deliberately narrower than the products it is a check on. One address in, one
+page out: is it stale, is its equity representative, how many losses is its edge estimated from,
+what share of its orders could you place at your size, and are any of its exits blocked.</p>
+
+<div class="toolbar">
+  <p class="h">Check one address yourself</p>
+  <p>Free, no account, nothing stored. It runs the checks above live against the exchange's public
+  API, in your browser.</p>
+  <a class="cta" href="{{TOOL}}">Open the reality check</a>
+</div>
+
+<h2>Method</h2>
+<p>Everything above comes from two public Hyperliquid endpoints and no paid data. The leaderboard
+is a plain GET from <code>stats-data.hyperliquid.xyz</code>; per-account state and fills come from
+<code>POST api.hyperliquid.xyz/info</code>. Fills were pulled once for roughly a thousand addresses
+and cached, so the whole measurement re-runs without touching the API again.</p>
+<p>A trade is a closed BTC perpetual position as the exchange reports it, net of the fees in the
+same records. Equity is the account's current perpetual and spot value. Order placeability is
+computed per order, scaling the trader's size by the equity ratio and testing the result against
+the exchange minimum; a blocked exit is a closing order that fails that test.</p>
+<h3>Limits of this work, stated rather than buried</h3>
+<ul>
+  <li><strong>It is a window, not a career.</strong> 2,000 fills maximum, as in finding 4.</li>
+  <li><strong>The pool is survivorship-biased before we start,</strong> as in finding 5. Our 143
+  is an upper bound.</li>
+  <li><strong>Equity is today's number applied across the whole history.</strong> An account that
+  grew tenfold over the window would have been less followable earlier than we show.</li>
+  <li><strong>The exchange minimum we test against is taken from the published rules and has not
+  been verified by placing live orders.</strong> If it is wrong, the counts in finding 6 move.</li>
+  <li><strong>Not one of the 143 has been examined individually.</strong> We attacked exactly one
+  of them, the best-looking, and it failed on three further grounds: three losses in 126 trades,
+  BTC only 13% of its activity, and 82% of its orders resting limits a copier would not get filled
+  on. A shortlist is not a recommendation. It is a list of things to attack.</li>
+  <li><strong>One coin, one period.</strong> BTC perpetuals, screened 9 October 2026.</li>
+</ul>
+
+<div class="foot">
+  <p>Figures are reproducible from the cached measurement described above. Corrections are
+  welcome; if a number here is wrong we would rather fix it than defend it.</p>
+  <p>Nothing on this page is investment advice, a recommendation, or an invitation to trade.
+  Copying another trader can lose you more than the amount you put in.</p>
+</div>
+
+</div>

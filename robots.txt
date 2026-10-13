@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Add a Sitemap: line here once the public URL is known -- it has to be absolute.

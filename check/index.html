@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Leaderboard Reality Check</title>
+<meta name="description" content="Paste a Hyperliquid address and read the checks a return ranking leaves out: whether it still trades, how many losses its edge is estimated from, and how much of its order flow your account could actually place. Runs in your browser, nothing stored.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leaderboard Reality Check">
+<meta property="og:description" content="Paste a Hyperliquid address and read the checks a return ranking leaves out: whether it still trades, how many losses its edge is estimated from, and how much of its order flow your account could actually place. Runs in your browser, nothing stored.">
+<!-- Add og:url and <link rel="canonical"> once the public URL is known.
+     Both need the full absolute address, so they cannot be filled in before
+     the GitHub Pages URL exists. See README.md. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Supplied by the artifact host; written out explicitly for the standalone site. */
+:root{
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+img{max-width:100%}
+[hidden]:not([hidden="until-found"]){display:none!important}
+</style>
+<style>
+/* Layout: one-column instrument report -- query bar, verdict strip, stacked named checks, copyability panel, limits footer */
+:root{
+  --paper:#eceeef;
+  --card:#f8f9f9;
+  --ink:#191c1f;
+  --ink-soft:#5a6269;
+  --ink-faint:#8b9298;
+  --rule:#d2d7d9;
+  --rule-soft:#e1e5e6;
+  --accent:#275b61;
+  --pass:#386b36;
+  --warn:#8a5610;
+  --fail:#8e2f22;
+  --pass-bg:#e4ede2;
+  --warn-bg:#f4e9d6;
+  --fail-bg:#f2e0dc;
+  --font-sans:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#131619;
+    --card:#1b1f23;
+    --ink:#e4e6e7;
+    --ink-soft:#9aa2a8;
+    --ink-faint:#71797f;
+    --rule:#2c3237;
+    --rule-soft:#232931;
+    --accent:#7eb4ba;
+    --pass:#86b37c;
+    --warn:#d4a556;
+    --fail:#d98578;
+    --pass-bg:#1d2a1e;
+    --warn-bg:#2d2415;
+    --fail-bg:#2e1c19;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#131619;
+  --card:#1b1f23;
+  --ink:#e4e6e7;
+  --ink-soft:#9aa2a8;
+  --ink-faint:#71797f;
+  --rule:#2c3237;
+  --rule-soft:#232931;
+  --accent:#7eb4ba;
+  --pass:#86b37c;
+  --warn:#d4a556;
+  --fail:#d98578;
+  --pass-bg:#1d2a1e;
+  --warn-bg:#2d2415;
+  --fail-bg:#2e1c19;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font-sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:28px 48px}
+h1{
+  font-size:clamp(26px,5.4vw,38px);line-height:1.1;margin:0 0 6px;
+  font-weight:700;letter-spacing:-.02em;text-wrap:balance;
+}
+.standfirst{margin:0 0 4px;color:var(--ink-soft);max-width:62ch}
+.eyebrow{
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 10px;
+}
+/* ---- query bar ---- */
+form{
+  margin:24px 0 0;padding:16px;background:var(--card);
+  border:1px solid var(--rule);border-radius:4px;
+  display:grid;gap:12px;grid-template-columns:1fr;
+}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1 1 150px}
+.field.wide{flex:1 1 100%}
+label{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);
+}
+input,select{
+  font-family:var(--font-mono);font-size:13px;color:var(--ink);
+  background:var(--paper);border:1px solid var(--rule);border-radius:3px;
+  padding:9px 10px;min-width:0;width:100%;
+}
+input:focus-visible,select:focus-visible,button:focus-visible{
+  outline:2px solid var(--accent);outline-offset:1px;
+}
+button{
+  font-family:var(--font-sans);font-size:14px;font-weight:600;
+  background:var(--accent);color:var(--paper);border:1px solid var(--accent);
+  border-radius:3px;padding:10px 20px;cursor:pointer;
+}
+button[disabled]{opacity:.55;cursor:default}
+.hint{font-size:12.5px;color:var(--ink-faint);margin:0}
+.hint code{font-family:var(--font-mono);font-size:12px}
+/* ---- verdict strip ---- */
+.verdict{
+  margin:26px 0 0;padding:16px 18px;border-radius:4px;
+  border:1px solid var(--rule);background:var(--card);
+  display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline;
+}
+.verdict .count{
+  font-family:var(--font-mono);font-size:clamp(22px,4.6vw,30px);
+  font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+}
+.verdict .who{
+  font-family:var(--font-mono);font-size:12px;color:var(--ink-soft);
+  word-break:break-all;min-width:0;
+}
+/* ---- checks ---- */
+.checks{margin:14px 0 0;display:grid;gap:1px;background:var(--rule-soft);
+  border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.check{
+  background:var(--card);padding:14px 16px;
+  display:grid;grid-template-columns:72px 1fr;gap:4px 14px;align-items:start;
+}
+.chip{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;text-align:center;
+  padding:3px 0;border-radius:2px;align-self:start;
+}
+.chip.pass{background:var(--pass-bg);color:var(--pass)}
+.chip.warn{background:var(--warn-bg);color:var(--warn)}
+.chip.fail{background:var(--fail-bg);color:var(--fail)}
+.chip.info{background:var(--rule-soft);color:var(--ink-soft)}
+.check h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.005em}
+.check .fig{
+  font-family:var(--font-mono);font-size:13.5px;font-variant-numeric:tabular-nums;
+  color:var(--ink);margin:2px 0 0;
+}
+.check p{margin:3px 0 0;font-size:13.5px;color:var(--ink-soft);max-width:66ch}
+.check .span2{grid-column:2}
+/* ---- table ---- */
+.tablewrap{overflow-x:auto;margin:10px 0 0;border:1px solid var(--rule);border-radius:4px}
+table{border-collapse:collapse;width:100%;background:var(--card);font-size:13.5px}
+th,td{
+  text-align:right;padding:8px 12px;border-bottom:1px solid var(--rule-soft);
+  font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+th{
+  font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-faint);
+}
+th:first-child,td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:none}
+/* ---- sections ---- */
+section{margin:30px 0 0}
+h2{
+  font-size:13px;font-weight:600;font-family:var(--font-mono);
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);
+  margin:0 0 8px;padding-bottom:7px;border-bottom:1px solid var(--rule);
+}
+section p{margin:0 0 9px;color:var(--ink-soft);font-size:13.5px;max-width:68ch}
+section p strong{color:var(--ink);font-weight:600}
+ul{margin:0;padding-left:20px;color:var(--ink-soft);font-size:13.5px}
+li{margin:0 0 6px;max-width:66ch}
+li strong{color:var(--ink);font-weight:600}
+.msg{
+  margin:26px 0 0;padding:14px 16px;border-radius:4px;font-size:13.5px;
+  border:1px solid var(--rule);background:var(--card);color:var(--ink-soft);
+}
+.msg.bad{border-color:var(--fail);background:var(--fail-bg);color:var(--fail)}
+.mono{font-family:var(--font-mono)}
+footer{
+  margin:40px 0 0;padding-top:16px;border-top:1px solid var(--rule);
+  font-size:12.5px;color:var(--ink-faint);max-width:68ch;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Hyperliquid · public chain data</p>
+  <h1>Leaderboard Reality Check</h1>
+  <p class="standfirst">Paste a Hyperliquid address. This reads its own fills off the public API and runs the checks a return ranking leaves out — whether it still trades, whether its equity is even visible, how many losses its edge is estimated from, and how much of its order flow your account could actually place.</p>
+  <p class="hint">Everything runs in your browser. No account, no keys, nothing sent anywhere except Hyperliquid's own public endpoint.</p>
+
+  <form id="f" autocomplete="off">
+    <div class="field wide">
+      <label for="addr">Address</label>
+      <input id="addr" name="addr" spellcheck="false" placeholder="0x…" value="0x4d2a44b0bad99a50d7b1630d5d34ce2f67a65603">
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="coin">Coin</label>
+        <select id="coin"><option value="*">All coins</option></select>
+      </div>
+      <div class="field">
+        <label for="equity">Your account (USD)</label>
+        <input id="equity" name="equity" inputmode="decimal" value="200">
+      </div>
+      <div class="field">
+        <label for="minorder">Min order (USD)</label>
+        <input id="minorder" name="minorder" inputmode="decimal" value="10">
+      </div>
+      <div class="field" style="flex:0 0 auto;justify-content:flex-end">
+        <label>&nbsp;</label>
+        <button id="go" type="submit">Run checks</button>
+      </div>
+    </div>
+    <p class="hint">Minimum order size is <strong>not stated in Hyperliquid's docs</strong> — <code>10</code> is an assumption you can change. The example address above is one of ours; replace it with any <code>0x</code> address.</p>
+  </form>
+
+  <div id="msg" class="msg">Reading the example address…</div>
+  <div id="out" hidden></div>
+
+  <section>
+    <h2>What a return ranking hides</h2>
+    <p>These are the defects found while measuring 2,917 screened Hyperliquid accounts.</p>
+    <p>Each is a check above. The full measurement &mdash; all 47,190 ranked accounts, every exclusion counted, and what account size does to the candidate pool &mdash; is written up in <a href="../">What the Leaderboards Hide</a>.</p>
+    <ul>
+      <li><strong>Dead accounts stay listed.</strong> 274 of the accounts excluded from that sweep had not traded the coin in over 45 days — 42% of all exclusions. Several were advertised at triple-digit "month ROI" after 100+ days of no trading. Staleness ran 5% across all screened accounts but <strong>10% in the top 40 by ROI</strong>: it concentrates exactly where the ranking points.</li>
+      <li><strong>Equity is read from the wrong place.</strong> Perp balance alone reports zero for anyone parking funds in spot, which silently dropped 13 of 20 qualifying accounts. The example address is a live case: its perp account value reads <span class="mono">0.0</span>.</li>
+      <li><strong>A perfect record is the most suspicious one.</strong> 125 accounts had no losses at all, which makes a break-even rate incomputable. The cleanest record found — 606 closed trades, not one loss — holds only one leg of a hedge; copying it takes on the exact risk the hedge exists to cancel.</li>
+      <li><strong>An edge measured from one loss is noise.</strong> Ranking by margin instead of return looks rigorous until you count the losses: the top 12 had 1, 1, 1, 1, 5, 2, 1, 2, 2, 7, 3 and 1. Margin needs a minimum <em>loss</em> count, not just a minimum trade count.</li>
+      <li><strong>Resting orders cannot be copied.</strong> An account filling most of its volume as a maker is getting prices you will never get by following it.</li>
+      <li><strong>Liquidated accounts are not on the leaderboard at all</strong>, so every pool is survivorship-biased before you start — and <span class="mono">userFills</span> returns the most recent 2,000 fills, so what you see is a window, not a career.</li>
+    </ul>
+  </section>
+
+  <footer>
+    This page reports measurements of public on-chain data. It does not rank accounts, recommend any account, or suggest a position size, and nothing here is investment advice. Figures come from Hyperliquid's public <span class="mono">info</span> endpoint at the moment you press the button; <span class="mono">closedPnl</span> is realised profit only, and equity is today's value applied across the whole fill window.
+  </footer>
+</div>
+
+<script>
+const API = 'https://api.hyperliquid.xyz/info';
+const $ = id => document.getElementById(id);
+let cache = null;        // {addr, perp, spot, fills}
+
+async function info(body){
+  const r = await fetch(API, {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+  });
+  if(!r.ok) throw new Error('Hyperliquid returned HTTP ' + r.status);
+  return r.json();
+}
+
+const num = s => { const n = parseFloat(s); return Number.isFinite(n) ? n : 0; };
+const usd = n => (n<0?'-':'') + '$' + Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:Math.abs(n)<100?2:0});
+const pct = n => n.toFixed(1) + '%';
+const plural = (n, one, many) => n + ' ' + (n === 1 ? one : many);
+
+function equityOf(perp, spot){
+  const p = num(perp?.marginSummary?.accountValue);
+  const usdc = (spot?.balances || []).find(b => b.coin === 'USDC');
+  const s = num(usdc?.total);
+  return {perp:p, spot:s, total:p + s};
+}
+
+function unrealisedOf(perp){
+  return (perp?.assetPositions || []).reduce((a,p) => a + num(p?.position?.unrealizedPnl), 0);
+}
+
+function measure(fills, coin){
+  const sel = coin === '*' ? fills : fills.filter(f => f.coin === coin);
+  const closed = sel.filter(f => (f.dir||'').startsWith('Close'));
+  const pnl = closed.map(f => num(f.closedPnl));
+  const wins = pnl.filter(x => x > 0), losses = pnl.filter(x => x < 0).map(Math.abs);
+  const fees = sel.reduce((a,f) => a + (f.feeToken === 'USDC' ? num(f.fee) : 0), 0);
+  const gross = pnl.reduce((a,x) => a + x, 0);
+  const avgW = wins.length ? wins.reduce((a,x)=>a+x,0)/wins.length : 0;
+  const avgL = losses.length ? losses.reduce((a,x)=>a+x,0)/losses.length : 0;
+  const wr = closed.length ? 100*wins.length/closed.length : 0;
+  const be = (avgW+avgL) ? 100*avgL/(avgW+avgL) : null;
+  const taker = sel.length ? 100*sel.filter(f => f.crossed).length/sel.length : 0;
+  const last = sel.length ? Math.max(...sel.map(f => f.time)) : null;
+  return {
+    sel, closed:closed.length, wins:wins.length, losses:losses.length,
+    avgW, avgL, wr, be, margin: be===null ? null : wr-be,
+    net: gross - fees, fees, gross, taker,
+    staleDays: last === null ? null : (Date.now()-last)/86400000,
+    share: fills.length ? 100*sel.length/fills.length : 0
+  };
+}
+
+function copyability(sel, theirEquity, myEquity, minOrder){
+  const orders = new Map();
+  for(const f of sel){
+    const o = orders.get(f.oid) || {ntl:0, close:false};
+    o.ntl += num(f.px) * num(f.sz);
+    if((f.dir||'').startsWith('Close')) o.close = true;
+    orders.set(f.oid, o);
+  }
+  const all = [...orders.values()];
+  if(!all.length || theirEquity <= 0) return null;
+  const scale = myEquity / theirEquity;
+  const placeable = all.filter(o => o.ntl*scale >= minOrder).length;
+  const exits = all.filter(o => o.close);
+  const blocked = exits.filter(o => o.ntl*scale < minOrder).length;
+  const med = all.map(o=>o.ntl).sort((a,b)=>a-b)[Math.floor(all.length/2)];
+  return {
+    orders: all.length, placeable, pctPlaceable: 100*placeable/all.length,
+    exits: exits.length, blocked, medianOrder: med,
+    medianPctOfEquity: 100*med/theirEquity
+  };
+}
+
+function check(verdict, title, fig, note){
+  return `<div class="check">
+    <span class="chip ${verdict}">${verdict}</span>
+    <div style="min-width:0">
+      <h3>${title}</h3>
+      ${fig ? `<p class="fig">${fig}</p>` : ''}
+      ${note ? `<p>${note}</p>` : ''}
+    </div>
+  </div>`;
+}
+
+function render(addr, m, eq, unreal, copy, nFills, coin){
+  const rows = [];
+  const label = coin === '*' ? 'all coins' : coin;
+
+  // 1. still trading
+  rows.push(m.staleDays === null
+    ? check('fail','Still trading', 'no fills in this selection', 'Nothing to measure.')
+    : check(m.staleDays > 45 ? 'fail' : 'pass', 'Still trading',
+        plural(+m.staleDays.toFixed(0), 'day', 'days') + ' since the last fill in ' + label,
+        m.staleDays > 45
+          ? 'Over the 45-day line. A leaderboard will still advertise a return for this account.'
+          : 'Inside the 45-day line.'));
+
+  // 2. equity visible
+  rows.push(check(eq.total <= 0 ? 'fail' : (eq.perp <= 0 ? 'warn' : 'pass'), 'Equity visible',
+    usd(eq.total) + '  (perp ' + usd(eq.perp) + ' + spot USDC ' + usd(eq.spot) + ')',
+    eq.perp <= 0 && eq.spot > 0
+      ? 'Perp balance reads zero and the money is in spot. Any tool reading only the perp balance drops this account.'
+      : 'Perp and spot read together, which is what the copy maths needs.'));
+
+  // 3. enough closed trades
+  rows.push(check(m.closed >= 20 ? 'pass' : 'fail', 'Enough closed trades',
+    plural(m.closed, 'closed trade', 'closed trades') + ' in ' + label,
+    m.closed >= 20 ? 'Above the 20-trade floor.' : 'Under 20. Too few to say anything.'));
+
+  // 4. enough losses
+  rows.push(check(m.losses >= 10 ? 'pass' : 'fail', 'Enough losses to measure an edge',
+    plural(m.losses, 'loss', 'losses') + ', ' + plural(m.wins, 'win', 'wins'),
+    m.losses === 0
+      ? 'No losses at all, so a break-even rate cannot be computed. A flawless on-chain record usually means the record is incomplete — one leg of a hedge, or only the profitable tranche realised.'
+      : (m.losses >= 10
+        ? 'Enough to estimate the average loss.'
+        : 'Under 10 losses. The break-even rate below is estimated from this handful, so the margin is noise dressed as an edge.')));
+
+  // 5. margin
+  rows.push(m.be === null
+    ? check('fail','Margin over its own break-even', 'not computable', 'Needs at least one win and one loss.')
+    : check(m.margin > 0 ? 'pass' : 'fail', 'Margin over its own break-even',
+        pct(m.wr) + ' win rate against ' + pct(m.be) + ' needed  =  ' +
+        (m.margin>0?'+':'') + m.margin.toFixed(1) + ' points',
+        'Break-even comes from its own payoff shape: average loss ' + usd(m.avgL) +
+        ' against average win ' + usd(m.avgW) + '. A high win rate on small wins and large losses still loses money.'));
+
+  // 6. profitable after fees
+  rows.push(check(m.net > 0 ? 'pass' : 'fail', 'Profitable after fees',
+    usd(m.net) + '  (realised ' + usd(m.gross) + ' less ' + usd(m.fees) + ' fees)',
+    'Fees are taken from the fills themselves, not modelled.'));
+
+  // 7. taker share
+  rows.push(check(m.taker >= 50 ? 'pass' : 'fail', 'Prices you could actually get',
+    pct(m.taker) + ' of fills crossed the spread',
+    m.taker >= 50
+      ? 'Mostly taker, so a follower pays roughly the same prices.'
+      : 'Mostly resting limit orders. These are prices a follower will not get by copying after the fact.'));
+
+  // 8. realised only
+  rows.push(check(Math.abs(unreal) < Math.max(50, Math.abs(m.net)*0.25) ? 'pass' : 'warn',
+    'Nothing large sitting unrealised',
+    usd(unreal) + ' unrealised on open positions',
+    unreal < 0
+      ? 'Open losses are not in the figures above, because closedPnl is realised profit only. A record can look clean while the bag is still open.'
+      : 'Open profit is not in the figures above either; closedPnl is realised only.'));
+
+  // 9. window
+  rows.push(check(nFills >= 2000 ? 'warn' : 'info', 'Depth of the record',
+    nFills.toLocaleString('en-US') + ' fills returned' + (coin==='*' ? '' : ', ' + pct(m.share) + ' of them in ' + coin),
+    nFills >= 2000
+      ? 'The API caps at the most recent 2,000 fills, and this account hit the cap. Everything above describes a window, not a career.'
+      : 'Under the 2,000-fill cap, so this is the whole record the API exposes.'));
+
+  const failed = rows.filter(r => r.includes('chip fail')).length;
+  const warned = rows.filter(r => r.includes('chip warn')).length;
+
+  let copyHtml = '';
+  if(copy){
+    const sizes = [100, 200, 400, 1000];
+    const rowsHtml = sizes.map(s => {
+      const c = copyability(m.sel, eq.total, s, parseFloat($('minorder').value) || 10);
+      if(!c) return '';
+      return `<tr><td>${usd(s)}</td><td>${pct(c.pctPlaceable)}</td><td>${c.blocked} of ${c.exits}</td></tr>`;
+    }).join('');
+    copyHtml = `<section>
+      <h2>Could your account place these orders</h2>
+      <p>Their orders are grouped by <span class="mono">oid</span>, which is what a bot actually sends, then scaled by
+      your equity over theirs (${usd(eq.total)}). An order under the exchange minimum silently fails.
+      <strong>A blocked exit is the dangerous one</strong> — they close, you cannot, and you are left holding leveraged exposure nobody is managing.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Your account</th><th>Orders that would place</th><th>Blocked exits</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table></div>
+      <p style="margin-top:9px">Median order is ${usd(copy.medianOrder)}, which is ${pct(copy.medianPctOfEquity)} of their current equity.
+      ${copy.medianPctOfEquity > 50
+        ? '<strong>Over half their account per order, which means the equity figure no longer matches the trading</strong> — they have probably withdrawn, and every copyability number above is inflated.'
+        : 'Under half their account per order, so the equity figure is consistent with the trading.'}</p>
+    </section>`;
+  }
+
+  $('out').innerHTML = `
+    <div class="verdict">
+      <span class="count">${failed} of ${rows.length} checks failed</span>
+      ${warned ? `<span class="who">${warned} flagged for caution</span>` : ''}
+      <span class="who">${addr}</span>
+    </div>
+    <div class="checks">${rows.join('')}</div>
+    ${copyHtml}`;
+  $('out').hidden = false;
+}
+
+async function run(refetch){
+  const addr = $('addr').value.trim().toLowerCase();
+  const coin = $('coin').value;
+  const myEq = parseFloat($('equity').value) || 200;
+  const minOrder = parseFloat($('minorder').value) || 10;
+
+  if(!/^0x[0-9a-f]{40}$/.test(addr)){
+    $('msg').className = 'msg bad';
+    $('msg').textContent = 'That is not a Hyperliquid address. It needs 0x followed by 40 hex characters — Hyperliquid accounts are Ethereum-format, so a Solana or Bitcoin address cannot be queried here at all.';
+    $('msg').hidden = false; $('out').hidden = true;
+    return;
+  }
+
+  if(refetch || !cache || cache.addr !== addr){
+    $('go').disabled = true;
+    $('msg').className = 'msg';
+    $('msg').textContent = 'Reading fills, perp balance and spot balance from Hyperliquid…';
+    $('msg').hidden = false; $('out').hidden = true;
+    try{
+      const [perp, spot, fills] = await Promise.all([
+        info({type:'clearinghouseState', user:addr}),
+        info({type:'spotClearinghouseState', user:addr}),
+        info({type:'userFills', user:addr}),
+      ]);
+      cache = {addr, perp, spot, fills: Array.isArray(fills) ? fills : []};
+      const counts = {};
+      for(const f of cache.fills) counts[f.coin] = (counts[f.coin]||0)+1;
+      const opts = Object.entries(counts).sort((a,b)=>b[1]-a[1])
+        .map(([c,n]) => `<option value="${c}">${c} — ${n} fills</option>`).join('');
+      $('coin').innerHTML = '<option value="*">All coins</option>' + opts;
+    }catch(e){
+      $('msg').className = 'msg bad';
+      $('msg').textContent = 'Could not read that address: ' + e.message;
+      $('go').disabled = false;
+      return;
+    }
+    $('go').disabled = false;
+  }
+
+  if(!cache.fills.length){
+    $('msg').className = 'msg bad';
+    $('msg').textContent = 'Hyperliquid returned no fills for that address. It has never traded perps, or it is not a Hyperliquid account.';
+    $('out').hidden = true;
+    return;
+  }
+
+  const eq = equityOf(cache.perp, cache.spot);
+  const m = measure(cache.fills, $('coin').value);
+  const copy = copyability(m.sel, eq.total, myEq, minOrder);
+  $('msg').hidden = true;
+  render(addr, m, eq, unrealisedOf(cache.perp), copy, cache.fills.length, $('coin').value);
+}
+
+$('f').addEventListener('submit', e => { e.preventDefault(); run(true); });
+$('coin').addEventListener('change', () => run(false));
+$('equity').addEventListener('change', () => run(false));
+$('minorder').addEventListener('change', () => run(false));
+run(true);
+</script>
+</body>
+</html>
