@@ -1,6 +1,11 @@
-# Leaderboard Reality Check
+# Assay
 
 Two static pages about copy-trading leaderboards on Hyperliquid.
+
+An assay is the test that tells you how much real metal is in an ore. The
+leaderboard makes the claim; this reads what is actually in it. The name is also
+a constraint on what gets built here: an assay reports content, it does not
+recommend a purchase. See *What does not go in this repo* below.
 
 | page | path | what it is |
 |---|---|---|
@@ -26,8 +31,13 @@ build.py              wraps the partials into standalone pages
 index.html            GENERATED from src/article.html -- do not edit by hand
 check/index.html      GENERATED from src/tool.html   -- do not edit by hand
 404.html              hand-written, not generated
-robots.txt
+favicon.svg  robots.txt
 ```
+
+The site name lives in one place, `SITE_NAME` in `build.py`, which appends it to
+each page's `<title>` and `og:site_name`. The page titles themselves stay in the
+partials, unsuffixed, because those are also the artifact names. The wordmark in
+each page's masthead is the one other place the name is written.
 
 ### Why the partials exist
 

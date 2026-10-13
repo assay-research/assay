@@ -155,9 +155,30 @@ a.cta:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offs
 }
 .foot p{margin:0 0 9px}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+/* ---- masthead: the only place the site names itself ---- */
+.masthead{
+  display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;
+  justify-content:space-between;
+  margin:0 0 24px;padding-bottom:12px;border-bottom:1px solid var(--rule);
+}
+.masthead .wordmark{
+  font-family:var(--font-mono);font-size:13px;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--ink);
+  text-decoration:none;
+}
+.masthead .go{
+  font-size:13.5px;font-weight:500;color:var(--accent);text-decoration:none;
+}
+.masthead a:hover{text-decoration:underline}
+.masthead a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 
 <div class="wrap">
+
+<header class="masthead">
+  <a class="wordmark" href="{{ARTICLE}}">Assay</a>
+  <a class="go" href="{{TOOL}}">Check an address &rarr;</a>
+</header>
 
 <p class="eyebrow">Original research &middot; 13 October 2026</p>
 <h1>What the leaderboards hide</h1>

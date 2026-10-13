@@ -21,6 +21,9 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+SITE_NAME = "Assay"
+SEP = "\u00b7"   # middle dot
+
 # Where each partial lands on the site, and the two pieces of metadata a real
 # web page needs that an artifact does not: a description for search results
 # and link previews, and the relative path each page uses to reach the other.
@@ -81,6 +84,7 @@ DOC = """\
 <meta name="robots" content="index,follow">
 <link rel="icon" href="{icon}" type="image/svg+xml">
 <meta property="og:type" content="article">
+<meta property="og:site_name" content="Assay">
 <meta property="og:title" content="{og_title}">
 <meta property="og:description" content="{description}">
 <!-- Add og:url and <link rel="canonical"> once the public URL is known.
@@ -139,9 +143,9 @@ def build_site():
         title_tag, title_text, links, style, body = split_partial(text, page["src"])
 
         html = DOC.format(
-            title=title_tag,
+            title="<title>%s %s %s</title>" % (title_text, SEP, SITE_NAME),
             description=escape(page["description"]),
-            og_title=escape(title_text),
+            og_title=escape("%s %s %s" % (title_text, SEP, SITE_NAME)),
             links="\n".join(links),
             icon=page["icon"],
             reset=RESET,
