@@ -212,10 +212,11 @@ a.cta:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offs
 <p class="eyebrow">Original research &middot; 13 October 2026</p>
 <h1>What the leaderboards hide</h1>
 <p class="standfirst">We screened all <strong>47,190</strong> accounts on the public Hyperliquid
-leaderboard, measured <strong>317</strong> of them trade by trade, and found that
-<strong>143</strong> survive a test the leaderboard itself does not apply. Then we asked the
-question none of the copy-trading products answer: with a $200 account, how many of those 143
-could you actually follow? <strong>Thirty-two.</strong> Seven at $99.</p>
+leaderboard, then measured them trade by trade across <strong>four markets</strong> &mdash; BTC, ETH,
+SOL and HYPE. <strong>1,010 records survived long enough to be measurable. 482 pass a test the
+leaderboard itself does not apply.</strong> Then we asked the question none of the copy-trading
+products answer: with a $200 account, how many of those 482 could you actually follow?
+<strong>Eighty-four.</strong> Twenty-eight at $99.</p>
 
 <p class="byline">
   <span class="pub">By Assay</span>
@@ -227,91 +228,119 @@ could you actually follow? <strong>Thirty-two.</strong> Seven at $99.</p>
 wallets, show the curve, offer a button. The ranking is the product. So the ranking is where to
 look, and the ranking is built on data with six specific, checkable defects.</p>
 
-<p>None of what follows is an opinion about anyone's trading. It is arithmetic on the exchange's
-own API, and each finding below names the number you can reproduce it from.</p>
+<p>We measured four markets rather than one so that each finding can be tested against itself. Three
+of the six turn out to be <em>worse</em> away from BTC. One of them largely disappears on HYPE, and
+we say so, because a page that asks you to check its numbers does not get to quote only the
+convenient ones.</p>
+
+<p>None of this is an opinion about anyone's trading. It is arithmetic on the exchange's own API,
+and each finding names the number you can reproduce it from.</p>
 
 <h2>The funnel, with every exclusion stated</h2>
 
-<p>A screen that reports only its survivors is doing the same thing a league table does. Here is
-the whole population and where it went. <strong>All 47,190 ranked accounts in, 143 out.</strong></p>
+<p>A screen that reports only its survivors is doing the same thing a league table does. Here is the
+whole population, per market, and where it went. The same address can appear in more than one
+market, so these are <strong>trader-market records</strong>: 1,010 of them, from
+<strong>682 distinct addresses</strong>.</p>
 
 <div class="scroll">
 <table>
-  <caption>BTC perpetual traders, Hyperliquid, screened 9 October 2026</caption>
-  <thead><tr><th>Stage</th><th>Accounts</th><th>Share of exclusions</th></tr></thead>
+  <caption>Hyperliquid, screened 9&ndash;13 October 2026 &middot; 47,190 ranked &rarr; 2,917 pass the first screen</caption>
+  <thead><tr><th>Stage</th><th>BTC</th><th>HYPE</th><th>ETH</th><th>SOL</th></tr></thead>
   <tbody>
-    <tr><td>On the public leaderboard</td><td class="n">47,190</td><td class="n">&mdash;</td></tr>
-    <tr><td>Pass the first screen</td><td class="n">2,917</td><td class="n">&mdash;</td></tr>
-    <tr><td>At least 20 closed BTC trades</td><td class="n">973</td><td class="n">&mdash;</td></tr>
-    <tr><td><strong>Measurable</strong></td><td class="n"><strong>317</strong></td><td class="n">&mdash;</td></tr>
-    <tr class="out"><td>Excluded &mdash; dead, last BTC trade over 45 days ago</td><td class="n">274</td><td class="n">41.8%</td></tr>
-    <tr class="out"><td>Excluded &mdash; equity unrepresentative of the trading</td><td class="n">183</td><td class="n">27.9%</td></tr>
-    <tr class="out"><td>Excluded &mdash; no losing trade at all, break-even incomputable</td><td class="n">125</td><td class="n">19.1%</td></tr>
-    <tr class="out"><td>Excluded &mdash; no equity in perp or spot</td><td class="n">45</td><td class="n">6.9%</td></tr>
-    <tr class="out"><td>Excluded &mdash; no winning trade at all</td><td class="n">~30</td><td class="n">4.6%</td></tr>
-    <tr class="keep"><td>Profitable, positive edge, and enough losses to measure it</td><td class="n">143</td><td class="n">&mdash;</td></tr>
+    <tr><td>At least 20 closed trades in that market</td><td class="n">973</td><td class="n">1,187</td><td class="n">595</td><td class="n">346</td></tr>
+    <tr><td><strong>Measurable</strong></td><td class="n"><strong>317</strong></td><td class="n"><strong>400</strong></td><td class="n"><strong>203</strong></td><td class="n"><strong>90</strong></td></tr>
+    <tr class="out"><td>Excluded &mdash; dead, no trade in over 45 days</td><td class="n">41.8%</td><td class="n">46.9%</td><td class="n">50.3%</td><td class="n">60.2%</td></tr>
+    <tr class="out"><td>Excluded &mdash; no losing trade at all</td><td class="n">19.1%</td><td class="n">18.7%</td><td class="n">17.1%</td><td class="n">19.5%</td></tr>
+    <tr class="out"><td>Excluded &mdash; equity unrepresentative of the trading</td><td class="n">27.9%</td><td class="n">19.4%</td><td class="n">20.2%</td><td class="n">11.7%</td></tr>
+    <tr class="out"><td>Excluded &mdash; no equity in perp or spot</td><td class="n">6.9%</td><td class="n">7.9%</td><td class="n">5.4%</td><td class="n">2.7%</td></tr>
+    <tr class="out"><td>Excluded &mdash; no winning trade at all</td><td class="n">4.6%</td><td class="n">7.1%</td><td class="n">7.1%</td><td class="n">5.9%</td></tr>
+    <tr class="keep"><td>Profitable, positive edge, enough losses to measure it</td><td class="n">143</td><td class="n">209</td><td class="n">89</td><td class="n">41</td></tr>
   </tbody>
 </table>
 </div>
 
+<p>Exclusion percentages are shares of that market's exclusions, not of the measurable set. The
+survivor rate is the steadiest number in the whole exercise: <strong>64.7%, 65.8%, 62.1% and
+62.2%</strong> of measurable traders show positive edge and net profit. Whatever these four markets
+differ in, it is not that.</p>
+
 <div class="finding">
 <span class="fnum">Finding 1</span>
-<h2>Two in five of the accounts we had to throw out were dead ones still being ranked</h2>
+<h2>Between two and three in five excluded accounts were dead ones still being ranked</h2>
 <div class="figure">
-  <span class="big">274 of 656</span>
-  <span class="cap">Exclusions that were accounts with no BTC trade in over 45 days &mdash; 41.8%,
-  the single largest data-quality problem in the exercise.</span>
+  <span class="big">41.8% &rarr; 60.2%</span>
+  <span class="cap">Share of each market's exclusions that were accounts with no trade in over 45
+  days. BTC is the mildest case of the four; on SOL it is three in five.</span>
 </div>
 <p>They are not delisted. They sit in the table with a month-return figure attached, and some of
 those figures are large: four of them displayed <span class="num">112.9%</span>,
 <span class="num">207.6%</span>, <span class="num">122.7%</span> and
 <span class="num">173.0%</span> month returns after more than a hundred days without placing a
 trade. The number is real. It is just not about this month, and nothing on the page says so.</p>
-<p>Staleness is about <strong>5% across every account we screened, but roughly 10% in the top 40
-by return</strong>. It concentrates exactly where the ranking is pointing, because an account
-that stopped trading stopped losing.</p>
+<p>Staleness is about <strong>5% across every account we screened, but roughly 10% in the top 40 by
+return</strong>. It concentrates exactly where the ranking is pointing, because an account that
+stopped trading stopped losing.</p>
+<p><strong>It is the largest single exclusion category in all four markets</strong>, which is what
+makes it a property of the leaderboard rather than of any one coin.</p>
 </div>
 
 <div class="finding">
 <span class="fnum">Finding 2</span>
-<h2>The best-looking record on the chain is half a position</h2>
+<h2>About one in five excluded accounts has never had a losing trade</h2>
 <div class="figure">
-  <span class="big">606 closed trades, 0 losses</span>
-  <span class="cap">$3.43m realised, 100% taker across all 1,318 fills, BTC and ETH only.</span>
+  <span class="big">19.1% &nbsp; 18.7% &nbsp; 17.1% &nbsp; 19.5%</span>
+  <span class="cap">Share of exclusions that were accounts with no loss at all, in BTC, HYPE, ETH and
+  SOL. The most consistent number we measured.</span>
 </div>
-<p>This is the account anyone ranking by return or by win rate finds first. We checked whether it
-was hiding a loss somewhere: it is not. $3.51m of perpetual equity, $29.85m of notional, one open
-12,000 ETH position at 20&times; showing <span class="num">+$597,506</span> unrealised.</p>
+<p>A record with no losses cannot be assessed, because the break-even calculation in Finding 3 needs
+an average loss to divide by. More importantly, a flawless record is usually a sign that the record
+is incomplete rather than that the trader is flawless.</p>
+<p>The clearest case: one account shows <strong>606 closed trades, not one of them a loss</strong>,
+$3.43m realised, 100% taker across all 1,318 fills. We checked whether it was hiding a loss. It is
+not &mdash; $3.51m of perpetual equity, $29.85m of notional, one open 12,000 ETH position at
+20&times; showing <span class="num">+$597,506</span> unrealised.</p>
 <p>A discretionary trader does not go 606 for 606. The readings that fit are an arbitrage or basis
 book whose other leg is not on this exchange, or a book that only ever realises the profitable
 tranche. <strong>Either way the on-chain record is one side of a position</strong>, and copying one
 leg of a hedge takes on precisely the directional risk the hedge exists to cancel.</p>
-<p>It is not a lone case. <strong>125 of the accounts we measured had no losing trade at all.</strong>
-And the exchange reports <code>closedPnl</code>, which is realised only, so an account can carry an
+<p>The exchange reports <code>closedPnl</code>, which is realised only, so an account can carry an
 underwater position indefinitely and show a clean record the whole time.</p>
 </div>
 
 <div class="finding">
 <span class="fnum">Finding 3</span>
-<h2>Ranking by win rate is a known mistake. Ranking by edge fails the same way.</h2>
-<p>Win rate alone says nothing, which everyone knows, so the sophisticated version is to compare
-it against the win rate a trader needs to break even:</p>
+<h2>Ranking by edge fixes the win-rate problem and introduces a new one &mdash; in three markets out of four</h2>
+<p>Win rate alone says nothing, which everyone knows, so the sophisticated version is to compare it
+against the win rate a trader needs just to break even:</p>
 <p><code>break-even % = avg_loss / (avg_win + avg_loss)</code>, and edge is
 <code>win % &minus; break-even %</code>.</p>
-<p>That is the right formula and it still produced nonsense, because of what it is estimated from.
-The top twelve accounts by edge scored <span class="num">+86</span> to
-<span class="num">+98</span> points. Their loss counts:</p>
-<div class="figure">
-  <span class="big">1 &nbsp;1 &nbsp;1 &nbsp;1 &nbsp;5 &nbsp;2 &nbsp;1 &nbsp;2 &nbsp;2 &nbsp;7 &nbsp;3 &nbsp;1</span>
-  <span class="cap">Losing trades behind each of the twelve largest measured edges.
-  Median: two. Eight of the twelve have exactly one.</span>
+<p>That is the right formula, and on BTC it still produced nonsense &mdash; because of what it was
+estimated from. These are the loss counts behind the twelve largest edges in each market:</p>
+<div class="scroll">
+<table>
+  <caption>Losing trades behind each market's twelve largest measured edges</caption>
+  <thead><tr><th>Market</th><th>Loss counts, largest edge first</th><th>Median</th></tr></thead>
+  <tbody>
+    <tr><td>BTC</td><td class="n">1 &nbsp;1 &nbsp;1 &nbsp;1 &nbsp;5 &nbsp;2 &nbsp;1 &nbsp;2 &nbsp;2 &nbsp;7 &nbsp;3 &nbsp;1</td><td class="n">2</td></tr>
+    <tr><td>ETH</td><td class="n">2 &nbsp;1 &nbsp;2 &nbsp;6 &nbsp;2 &nbsp;6 &nbsp;18 &nbsp;1 &nbsp;1 &nbsp;7 &nbsp;2 &nbsp;16</td><td class="n">2</td></tr>
+    <tr><td>SOL</td><td class="n">3 &nbsp;2 &nbsp;12 &nbsp;2 &nbsp;11 &nbsp;5 &nbsp;4 &nbsp;9 &nbsp;51 &nbsp;3 &nbsp;20 &nbsp;2</td><td class="n">4.5</td></tr>
+    <tr class="keep"><td>HYPE</td><td class="n">3 &nbsp;18 &nbsp;14 &nbsp;11 &nbsp;4 &nbsp;1 &nbsp;19 &nbsp;23 &nbsp;4 &nbsp;21 &nbsp;59 &nbsp;11</td><td class="n">13</td></tr>
+  </tbody>
+</table>
 </div>
-<p>A break-even rate of 0.5% means the average loss is a two-hundredth of the average win, which
-happens when one small loss is the entire loss sample. <strong>An edge estimated from a single
-loss is noise with a formula on it.</strong></p>
-<p>Requiring at least ten losing trades before the number is allowed to count takes the
-"profitable" population from <strong>205 down to 143</strong>. Their median edge is
-<span class="num">+27.1</span> points. That is the honest version of the same list.</p>
+<p>On BTC and ETH, eight of the top twelve rest on two losses or fewer. A break-even rate of 0.5%
+means the average loss is a two-hundredth of the average win, which happens when one small loss is
+the entire loss sample. <strong>An edge estimated from a single loss is noise with a formula on
+it.</strong></p>
+<p><strong>On HYPE the defect mostly is not there</strong>, and the reason is visible in the data:
+HYPE traders close a median of <span class="num">166</span> trades against BTC's
+<span class="num">76</span>. It is the exchange's own token, traded hardest by its most active
+accounts, so there is enough history to estimate from. <strong>The defect is real, and it is a
+property of thin records rather than of the formula.</strong> Check the loss count, not the coin.</p>
+<p>Requiring at least ten losing trades before an edge is allowed to count removes
+<strong>30% of BTC's "profitable" accounts, 29% of ETH's, 27% of SOL's and 21% of HYPE's</strong>
+&mdash; in exactly the order the table above predicts.</p>
 </div>
 
 <div class="finding">
@@ -319,13 +348,16 @@ loss is noise with a formula on it.</strong></p>
 <h2>Every one of these products shows you a window and calls it a career</h2>
 <div class="figure">
   <span class="big">2,000 fills</span>
-  <span class="cap">The maximum <code>userFills</code> returns. Median span of the history we could
-  see: 124 days.</span>
+  <span class="cap">The maximum <code>userFills</code> returns, in any market. Median span of the
+  history we could see: 106 days &mdash; 124 on BTC, 110 on HYPE, 92 on ETH, 62 on SOL.</span>
 </div>
 <p>The API hands back the most recent 2,000 fills and no more. For a quiet account that is a long
-history; for an active one it is a few weeks, and the part you cannot see is the earlier part,
-which is where a trader was learning. Two accounts in our measurable set were sitting exactly on
-the cap. Nothing on a leaderboard distinguishes a 90-day record from a three-year one.</p>
+history; for an active one it is a few weeks, and the part you cannot see is the earlier part, which
+is where a trader was learning. Nothing on a leaderboard distinguishes a 90-day record from a
+three-year one.</p>
+<p>This bites hardest exactly where Finding 3 bites least. A HYPE trader closing 166 trades fills
+the 2,000-fill window fastest, so the deep loss counts that make their edge trustworthy are also the
+ones most likely to be a recent slice of a longer, different-looking career.</p>
 </div>
 
 <div class="finding">
@@ -333,11 +365,11 @@ the cap. Nothing on a leaderboard distinguishes a 90-day record from a three-yea
 <h2>The accounts that blew up are not in the pool at all</h2>
 <div class="figure">
   <span class="big">52.8%</span>
-  <span class="cap">Share of the 43,356 accounts with a usable window that are profitable
-  all-time &mdash; measured after the liquidated ones have already gone.</span>
+  <span class="cap">Share of the 43,356 accounts with a usable window that are profitable all-time
+  &mdash; measured after the liquidated ones have already gone.</span>
 </div>
-<p>Liquidated accounts do not appear on the leaderboard. Whatever you compute from it is computed
-on survivors, so every win rate, every return and every edge in this article is an overestimate,
+<p>Liquidated accounts do not appear on the leaderboard. Whatever you compute from it is computed on
+survivors, so every win rate, every return and every edge in this article is an overestimate,
 including ours. A barely-positive coin flip is the honest reading of that 52.8%, and it is the
 optimistic reading.</p>
 </div>
@@ -345,41 +377,41 @@ optimistic reading.</p>
 <div class="finding">
 <span class="fnum">Finding 6</span>
 <h2>Your account size decides this, not the trader's skill &mdash; and nobody tells you</h2>
-<p>This is the finding with money attached, and it is the one we have not seen anywhere else.</p>
+<p>This is the finding with money attached, it is the one we have not seen made anywhere else, and
+it is the one that got worse the further we looked from BTC.</p>
 <p>When you copy someone, the order placed for you is
 <code>their_order &times; (your_equity / their_equity)</code>. The traders on these leaderboards hold
-six figures; the median equity among our 143 is <span class="num">$166,930</span>. Scale their
-position down to a $200 account and a large share of the orders land under the exchange minimum
-and never go out at all.</p>
-<p>So we counted it. Of the 143 that survived every test above, how many could a given account
-actually follow &mdash; defined as <strong>at least 80% of their orders placeable at your size, and
-not one blocked exit</strong>:</p>
+six figures. Scale their position down to a $200 account and a large share of the orders land under
+the exchange minimum and never go out at all.</p>
+<p>So we counted it. Of the 482 records that survived every test above, how many could a given
+account actually follow &mdash; defined as <strong>at least 80% of their orders placeable at your
+size, with no blocked exits</strong>:</p>
 <div class="scroll">
 <table>
-  <caption>Followable traders by account size, of 143 that passed every other test</caption>
-  <thead><tr><th>Your account</th><th>Followable</th><th>Best edge available</th><th>Median edge</th></tr></thead>
+  <caption>Followable traders by account size, of those passing every other test</caption>
+  <thead><tr><th>Your account</th><th>BTC<br>of 143</th><th>HYPE<br>of 209</th><th>ETH<br>of 89</th><th>SOL<br>of 41</th><th>All<br>of 482</th></tr></thead>
   <tbody>
-    <tr><td>$99</td><td class="n">7</td><td class="n">+25.4</td><td class="n">+13.5</td></tr>
-    <tr><td>$200</td><td class="n">32</td><td class="n">+70.1</td><td class="n">+19.5</td></tr>
-    <tr><td>$400</td><td class="n">50</td><td class="n">+70.1</td><td class="n">+22.5</td></tr>
-    <tr class="keep"><td>All 143</td><td class="n">143</td><td class="n">+70.1</td><td class="n">+27.1</td></tr>
+    <tr><td>$99</td><td class="n">7</td><td class="n">10</td><td class="n">7</td><td class="n">4</td><td class="n"><strong>28</strong></td></tr>
+    <tr><td>$200</td><td class="n">32</td><td class="n">30</td><td class="n">16</td><td class="n">6</td><td class="n"><strong>84</strong></td></tr>
+    <tr><td>$400</td><td class="n">50</td><td class="n">56</td><td class="n">27</td><td class="n">13</td><td class="n"><strong>146</strong></td></tr>
   </tbody>
 </table>
 </div>
-<p><strong>Going from $99 to $400 multiplies the pool by seven.</strong> Nothing about the traders
-changed. And the smaller your account, the worse the traders you can reach: the best edge
-available at $99 is <span class="num">+25.4</span> against <span class="num">+70.1</span> at the top
-of the list, and the seven include win rates of <span class="num">16.1%</span> and
-<span class="num">23.7%</span>. <strong>The followable ones are not the good ones.</strong></p>
+<p><strong>At $99 you can follow 28 traders out of 482. Six percent.</strong> Going from $99 to $400
+multiplies the pool more than fivefold, and nothing about the traders changed.</p>
+<p>And the smaller your account, the worse the traders you can reach. On BTC the best edge available
+at $99 is <span class="num">+25.4</span> against <span class="num">+70.1</span> at the top of the
+list. <strong>The followable ones are not the good ones.</strong></p>
 <div class="callout">
   <p class="h">The part that should be on every product page</p>
   <p>A blocked order is survivable on the way in. You simply do not get the trade. A blocked order
   on the way <em>out</em> leaves you holding leveraged exposure that nobody is managing &mdash; the
   trader has closed, your copy has not, and no further signal is coming.</p>
-  <p><strong>Of the 143, 125 have at least one order a $99 account could not place to get out.
-  At $400 it is still 85.</strong> The median $99 account could place about
-  <span class="num">59.7%</span> of a survivor's orders. That is the number that decides whether
-  copying works, and it is a property of your balance, not of their skill.</p>
+  <p><strong>426 of the 482 &mdash; 88% &mdash; have at least one order a $99 account could not place
+  to get out. At $400 it is still 316, or 66%.</strong> The median survivor's orders are only
+  <span class="num">45.3%</span> placeable at $99, and on SOL that falls to
+  <span class="num">36.4%</span>. <strong>That is the number that decides whether copying works, and
+  it is a property of your balance, not of their skill.</strong></p>
 </div>
 </div>
 
@@ -389,50 +421,56 @@ you who to copy or at what size, and we never place an order. The moment a servi
 one, at this size" it is giving a personal recommendation on a financial instrument, and if it
 executes for you it is managing your money. Both are regulated activities in the EU and both are
 somebody else's business.</p>
-<p>So the tool is deliberately narrower than the products it is a check on. One address in, one
-page out: is it stale, is its equity representative, how many losses is its edge estimated from,
-what share of its orders could you place at your size, and are any of its exits blocked.</p>
+<p>So the tool is deliberately narrower than the products it is a check on. One address in, one page
+out: is it stale, is its equity representative, how many losses is its edge estimated from, what
+share of its orders could you place at your size, and are any of its exits blocked.</p>
 
 <div class="toolbar">
   <p class="h">Check one address yourself</p>
   <p>Free, no account, nothing stored. It runs the checks above live against the exchange's public
-  API, in your browser.</p>
+  API, in your browser, in whichever market that address actually trades.</p>
   <a class="cta" href="check/">Open the reality check</a>
 </div>
 
 <h2>Method</h2>
-<p>Everything above comes from two public Hyperliquid endpoints and no paid data. The leaderboard
-is a plain GET from <code>stats-data.hyperliquid.xyz</code>; per-account state and fills come from
-<code>POST api.hyperliquid.xyz/info</code>. Fills were pulled once for roughly a thousand addresses
-and cached, so the whole measurement re-runs without touching the API again.</p>
-<p>A trade is a closed BTC perpetual position as the exchange reports it, net of the fees in the
-same records. Equity is the account's current perpetual and spot value. Order placeability is
-computed per order, scaling the trader's size by the equity ratio and testing the result against
-the exchange minimum; a blocked exit is a closing order that fails that test.</p>
+<p>Everything above comes from two public Hyperliquid endpoints and no paid data. The leaderboard is
+a plain GET from <code>stats-data.hyperliquid.xyz</code>; per-account state and fills come from
+<code>POST api.hyperliquid.xyz/info</code>. Fills were pulled once for roughly three thousand
+addresses and cached, which is why measuring four markets instead of one cost no further API
+calls.</p>
+<p>A trade is a closed perpetual position in that market as the exchange reports it, net of the fees
+in the same records. Equity is the account's current perpetual and spot value read together, because
+perp alone reports zero for anyone parking funds in spot. Order placeability is computed per order,
+scaling the trader's size by the equity ratio and testing the result against the exchange minimum; a
+blocked exit is a closing order that fails that test.</p>
 <h3>Limits of this work, stated rather than buried</h3>
 <ul>
-  <li><strong>It is a window, not a career.</strong> 2,000 fills maximum, as in finding 4.</li>
-  <li><strong>The pool is survivorship-biased before we start,</strong> as in finding 5. Our 143
-  is an upper bound.</li>
+  <li><strong>It is a window, not a career.</strong> 2,000 fills maximum, as in Finding 4.</li>
+  <li><strong>The pool is survivorship-biased before we start,</strong> as in Finding 5. Our 482 is
+  an upper bound.</li>
   <li><strong>Equity is today's number applied across the whole history.</strong> An account that
   grew tenfold over the window would have been less followable earlier than we show.</li>
   <li><strong>The exchange minimum we test against is taken from the published rules and has not
-  been verified by placing live orders.</strong> If it is wrong, the counts in finding 6 move.</li>
-  <li><strong>Not one of the 143 has been examined individually.</strong> We attacked exactly one
-  of them, the best-looking, and it failed on three further grounds: three losses in 126 trades,
-  BTC only 13% of its activity, and 82% of its orders resting limits a copier would not get filled
-  on. A shortlist is not a recommendation. It is a list of things to attack.</li>
-  <li><strong>One coin, one period.</strong> BTC perpetuals, screened 9 October 2026.</li>
+  been verified by placing live orders.</strong> If it is wrong, the counts in Finding 6 move.</li>
+  <li><strong>Not one of the 482 has been examined individually.</strong> We attacked exactly one,
+  the best-looking, and it failed on three further grounds: three losses in 126 trades, BTC only 13%
+  of its activity, and 82% of its orders resting limits a copier would not get filled on. A
+  shortlist is not a recommendation. It is a list of things to attack.</li>
+  <li><strong>Four markets on one exchange.</strong> BTC, ETH, SOL and HYPE on Hyperliquid, screened
+  9&ndash;13 October 2026. We have not measured any other venue, and nothing here should be assumed
+  to carry across to one.</li>
+  <li><strong>The same address can appear in several markets.</strong> 1,010 measurable records come
+  from 682 distinct addresses; the 482 survivors from 388.</li>
 </ul>
 
 <div class="foot">
   <p><strong>Assay is an independent project, not a company and not a research firm.</strong> One
   person, public data, and a method written out so you can re-run it. That is the whole claim, and
   it is deliberately a small one: nothing here asks you to take our word for anything.</p>
-  <p>Figures are reproducible from the cached measurement described above. Corrections are
-  welcome; if a number here is wrong we would rather fix it than defend it.</p>
-  <p>Nothing on this page is investment advice, a recommendation, or an invitation to trade.
-  Copying another trader can lose you more than the amount you put in.</p>
+  <p>Figures are reproducible from the cached measurement described above. Corrections are welcome;
+  if a number here is wrong we would rather fix it than defend it.</p>
+  <p>Nothing on this page is investment advice, a recommendation, or an invitation to trade. Copying
+  another trader can lose you more than the amount you put in.</p>
 </div>
 
 </div>
