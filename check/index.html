@@ -216,6 +216,50 @@ footer{
 }
 .masthead a:hover{text-decoration:underline}
 .masthead a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* ---- plain-language opener ---- */
+.lede{
+  margin:20px 0 0;padding:16px 18px;background:var(--card);
+  border:1px solid var(--rule);border-left:3px solid var(--accent);border-radius:4px;
+}
+.lede p{margin:0 0 9px;font-size:14.5px;color:var(--ink);max-width:64ch}
+.lede p:last-child{margin-bottom:0}
+.lede strong{font-weight:600}
+/* ---- how to use ---- */
+.howto{margin:26px 0 0}
+.steps{
+  margin:0;padding:0;list-style:none;counter-reset:step;
+  display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(184px,1fr));
+}
+.steps li{
+  background:var(--card);border:1px solid var(--rule);border-radius:4px;
+  padding:13px 14px 14px;display:flex;flex-direction:column;gap:3px;min-width:0;
+}
+.steps li::before{
+  counter-increment:step;content:"Step " counter(step);
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--accent);
+}
+.steps b{font-size:14px;font-weight:600;line-height:1.3}
+.steps em{font-style:normal;font-size:13px;color:var(--ink-soft);line-height:1.45}
+.steps code{font-family:var(--font-mono);font-size:12px}
+/* ---- verdict legend ---- */
+.legend{
+  margin:14px 0 0;padding:12px 14px;background:var(--card);
+  border:1px solid var(--rule);border-radius:4px;
+  display:flex;flex-wrap:wrap;gap:9px 18px;align-items:center;
+}
+.legend .pair{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft)}
+.legend .chip{min-width:54px;flex:0 0 auto}
+/* ---- severity stripe on each check ---- */
+.check{border-left:3px solid transparent}
+.check.pass{border-left-color:var(--pass)}
+.check.warn{border-left-color:var(--warn)}
+.check.fail{border-left-color:var(--fail)}
+.check.info{border-left-color:var(--rule)}
+.example-note{
+  margin:14px 0 0;font-size:13px;color:var(--ink-faint);
+  font-style:italic;
+}
 </style>
 </head>
 <body>
@@ -226,8 +270,31 @@ footer{
   </header>
   <p class="eyebrow">Hyperliquid · public chain data</p>
   <h1>Leaderboard Reality Check</h1>
-  <p class="standfirst">Paste a Hyperliquid address. This reads its own fills off the public API and runs the checks a return ranking leaves out — whether it still trades, whether its equity is even visible, how many losses its edge is estimated from, and how much of its order flow your account could actually place.</p>
-  <p class="hint">Everything runs in your browser. No account, no keys, nothing sent anywhere except Hyperliquid's own public endpoint.</p>
+  <p class="standfirst">A second opinion on a trader you are thinking of copying.</p>
+
+  <div class="lede">
+    <p>You have found someone on a leaderboard with a good-looking record, and there is a button
+    offering to copy them. <strong>This page checks the record before you press it.</strong></p>
+    <p>It reads that trader's own completed trades straight from Hyperliquid's public API and runs
+    nine checks a return ranking leaves out &mdash; including the one nobody else asks:
+    <strong>with an account your size, could you actually place their orders at all?</strong></p>
+    <p>Free, no sign-up. <strong>It runs entirely inside your browser</strong>, so nothing you type
+    is sent to us or stored anywhere.</p>
+  </div>
+
+  <div class="howto">
+    <h2>How to use it</h2>
+    <ol class="steps">
+      <li><b>Get the trader's address</b><em>On a Hyperliquid leaderboard or explorer, each trader
+        is a long address starting <code>0x</code>. Copy the whole thing.</em></li>
+      <li><b>Paste it in the Address box</b><em>Replacing the example address that is already
+        there.</em></li>
+      <li><b>Put in your account size</b><em>In dollars. This is what decides whether their orders
+        would be big enough for you to place at all. Then press <b>Run checks</b>.</em></li>
+      <li><b>Read the nine checks</b><em>Anything marked <b>FAIL</b> is a reason to think twice.
+        The table underneath shows what your account could actually copy.</em></li>
+    </ol>
+  </div>
 
   <form id="f" autocomplete="off">
     <div class="field wide">
@@ -252,9 +319,13 @@ footer{
         <button id="go" type="submit">Run checks</button>
       </div>
     </div>
-    <p class="hint">Minimum order size is <strong>not stated in Hyperliquid's docs</strong> — <code>10</code> is an assumption you can change. The example address above is one of ours; replace it with any <code>0x</code> address.</p>
+    <p class="hint"><strong>Min order</strong> is the smallest trade the exchange will accept, in
+    dollars. Hyperliquid does not state it in the docs, so <code>10</code> is our assumption &mdash;
+    change it if you know better.</p>
   </form>
 
+  <p class="example-note">We have filled in an example address so you can see what a finished
+  result looks like. Replace it with the trader you want to check.</p>
   <div id="msg" class="msg">Reading the example address…</div>
   <div id="out" hidden></div>
 
@@ -353,7 +424,7 @@ function copyability(sel, theirEquity, myEquity, minOrder){
 }
 
 function check(verdict, title, fig, note){
-  return `<div class="check">
+  return `<div class="check ${verdict}">
     <span class="chip ${verdict}">${verdict}</span>
     <div style="min-width:0">
       <h3>${title}</h3>
@@ -465,6 +536,12 @@ function render(addr, m, eq, unreal, copy, nFills, coin){
       <span class="count">${failed} of ${rows.length} checks failed</span>
       ${warned ? `<span class="who">${warned} flagged for caution</span>` : ''}
       <span class="who">${addr}</span>
+    </div>
+    <div class="legend">
+      <span class="pair"><span class="chip pass">pass</span>nothing wrong here</span>
+      <span class="pair"><span class="chip warn">warn</span>read it before deciding</span>
+      <span class="pair"><span class="chip fail">fail</span>a reason not to copy</span>
+      <span class="pair"><span class="chip info">info</span>context, not a judgement</span>
     </div>
     <div class="checks">${rows.join('')}</div>
     ${copyHtml}`;
